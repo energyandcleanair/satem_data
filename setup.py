@@ -23,4 +23,8 @@ setuptools.setup(
     package_dir={"": "satem_data"},
     packages=setuptools.find_packages(where="satem_data"),
     python_requires=">=3.6",
+    install_requires=[
+        "pymongo",
+        "dnspython"
+    ]
 )
