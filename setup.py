@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="satemdata",
-    version="0.0.1",
+    version="0.0.2",
     author="CREA Dev Team",
     author_email="hubert@energyandcleanair.org",
     description="A package to retrieve emission and feature data from SatEm related databases.",
@@ -20,8 +20,8 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "satem_data"},
-    packages=setuptools.find_packages(where="satem_data"),
+    package_dir={"": "satemdata"},
+    packages=setuptools.find_packages(where="satemdata"),
     python_requires=">=3.6",
     install_requires=[
         "pymongo",
