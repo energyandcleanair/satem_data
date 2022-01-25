@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="satem_data",
+    name="satemdata",
     version="0.0.1",
     author="CREA Dev Team",
     author_email="hubert@energyandcleanair.org",
