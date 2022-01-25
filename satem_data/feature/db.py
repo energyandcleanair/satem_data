@@ -1,37 +1,21 @@
-from pymongo import MongoClient
-import pymongo
-from decouple import config
+import db_mongo
 
-from . import FEATURES_UNIQUE_COLS
+from . import DB_SATEM
 from . import FEATURES_COLLECTION
+from . import FEATURES_UNIQUE_COLS
 
 
-def get_database():
-
-    # Provide the mongodb atlas url to connect python to mongodb using pymongo
-    url = config("CREA_MONGODB_URL", None)
-    if not url:
-        raise EnvironmentError("Missing CREA_MONGODB_URL environment variable.")
-
-    db_name = "satem"
-    # Create a connection using MongoClient. You can import MongoClient or use pymongo.MongoClient
-    from pymongo import MongoClient
-    client = MongoClient(url)
-
-    # Create the database for our example (we will use the same database throughout the tutorial
-    return client[db_name]
+def get_feature_db(db_name=DB_SATEM):
+    return db_mongo.get_database(db_name=db_name)
 
 
-def get_feature_collection(db=None):
-
-    if not db:
-        db = get_database()
-
-    return db[FEATURES_COLLECTION]
+def get_feature_col(db=None, db_name=DB_SATEM, collection_name=FEATURES_COLLECTION):
+    return db_mongo.get_collection(collection_name=collection_name,
+                                   db=db,
+                                   db_name=db_name)
 
 
-def create_feature_index(feature_col):
-    feature_col.create_index(
-        [(x, pymongo.ASCENDING) for x in FEATURES_UNIQUE_COLS],
-        unique=True
-    )
+def create_feature_index(feature_col=get_feature_col()):
+    return db_mongo.create_index(collection=feature_col,
+                    cols=FEATURES_UNIQUE_COLS,
+                    unique=True)
