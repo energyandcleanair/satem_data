@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="satemdata",
-    version="0.0.3",
+    version="0.0.3b",
     author="CREA Dev Team",
     author_email="hubert@energyandcleanair.org",
     description="A package to retrieve emission and feature data from SatEm related databases.",
@@ -25,6 +25,7 @@ setuptools.setup(
     python_requires=">=3.6",
     install_requires=[
         "pymongo",
-        "dnspython"
+        "dnspython",
+        "python-decouple"
     ]
 )
