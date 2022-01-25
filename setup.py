@@ -21,7 +21,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     package_dir={"": "satemdata"},
-    packages=setuptools.find_packages(where="satemdata"),
+    packages=setuptools.find_packages(),
     python_requires=">=3.6",
     install_requires=[
         "pymongo",
