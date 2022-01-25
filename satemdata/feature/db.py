@@ -1,4 +1,4 @@
-import db_mongo
+from .. import db_mongo
 
 from . import DB_SATEM
 from . import FEATURES_COLLECTION
