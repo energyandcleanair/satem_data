@@ -1,10 +1,6 @@
 import datetime as dt
 
-from . import db
 from . import DATE_FORMAT
-from . import FEATURES_COLLECTION
-from . import FEATURES_UNIQUE_COLS
-from . import DB_SATEM
 
 
 def get_feature_date(feature):
@@ -36,31 +32,9 @@ def clean_feature(feature):
     feature['date'] = clean_date(feature['date'])
 
     # Check required fields are here
-    required_fields = ["facility_id"]
-    if set(required_fields) - set(feature.keys()):
-        raise ValueError("Missing fields in feature")
+    required_fields = ["location_id", "date", "tropomi_no2"]
+    missing = set(required_fields) - set(feature.keys())
+    if missing:
+        raise ValueError("Missing fields in feature: %s"% (missing,))
 
     return feature
-
-
-def insert_feature(feature, feature_col=db.get_feature_col()):
-    feature = clean_feature(feature)
-    feature_col.insert_one(feature)
-
-
-def insert_features(features, feature_col=db.get_feature_col()):
-    features = [clean_feature(x) for x in features]
-    feature_col.insert_many(features)
-
-
-def get_features(facility_id=None, date=None, additional_filter={}, feature_col=db.get_feature_col()):
-    filter = additional_filter
-
-    if facility_id:
-        filter['facility_id'] = facility_id
-
-    if date:
-        filter['date'] = clean_date(date)
-
-    return list(feature_col.find(filter))
-

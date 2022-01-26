@@ -26,6 +26,9 @@ setuptools.setup(
     install_requires=[
         "pymongo",
         "dnspython",
-        "python-decouple"
+        "python-decouple",
+        "geoalchemy2",
+        "sqlalchemy==1.4",
+        "psycopg2-binary==2.9.3"
     ]
 )

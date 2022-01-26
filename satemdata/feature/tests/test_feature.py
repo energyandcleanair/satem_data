@@ -1,14 +1,21 @@
 import datetime as dt
 import pytest
+import json
 from pymongo.errors import DuplicateKeyError
 
 
 import feature
 from feature import db
+from feature.crud import insert_feature
 from feature import FEATURES_UNIQUE_COLS
 from feature import FEATURES_COLLECTION
 from feature import DB_SATEM_TEST
 from feature import DATE_FORMAT
+
+
+@pytest.fixture
+def db_test():
+    return db.get_feature_db(DB_SATEM_TEST)
 
 
 @pytest.fixture
@@ -67,6 +74,19 @@ def test_crud_feature(feature_col, features):
     # It should failed
     with pytest.raises(DuplicateKeyError):
         feature_col.insert_one(item.copy())
+
+
+def test_enforce_schema(db_test, feature_col):
+
+    # First insert a valid item
+    with open('satemdata/feature/tests/data/feature_valid.json', 'r') as j:
+        feature_valid = json.loads(j.read())
+
+    insert_feature(feature_valid.copy(), feature_col=feature_col)
+
+    db.enforce_schema(db=db_test)
+
+    insert_feature(feature_valid.copy(), feature_col=feature_col)
 
 
 def test_create_index(feature_col):

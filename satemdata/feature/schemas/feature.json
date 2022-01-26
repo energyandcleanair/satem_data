@@ -1,0 +1,59 @@
+ {
+   "collMod": "features",
+    "validator": {
+      "$jsonSchema": {
+        "bsonType": "object",
+        "required": ["location_id", "date", "tropomi_no2"],
+        "properties": {
+          "location_id": {
+            "bsonType": "string",
+            "description": "Id of location (cna be a power plant, a city etc.)"
+          },
+          "date": {
+            "bsonType": "string",
+            "description": "date of the feature (typically a date, not a datetime)"
+          },
+          "tropomi_no2": {
+            "bsonType": "object",
+            "required": ["image_version", "density_line"],
+            "description": "Tropomi NO2 information",
+            "properties":  {
+              "image_version": {
+                "bsonType": "string",
+                "description": "Version of the algorithm used to build the original image."
+              },
+              "density_line": {
+                "bsonType": "array",
+                "items": {
+                  "bsonType": "object",
+                  "required": [
+                    "no2_du",
+                    "downwind_km",
+                    "crosswind_km"
+                  ],
+                  "description": "Each item describes a density line",
+                  "properties": {
+                    "no2_du": {
+                      "bsonType": "array",
+                      "items": {
+                        "bsonType": "double"
+                      }
+                    },
+                    "downwind_km": {
+                      "bsonType": "array",
+                      "items": {
+                        "bsonType": "double"
+                      }
+                    },
+                    "crosswind_km": {
+                      "bsonType": ["double","int"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
