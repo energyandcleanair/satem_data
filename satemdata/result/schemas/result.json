@@ -1,0 +1,59 @@
+{
+  "collMod": "features",
+  "validator": {
+    "$jsonSchema": {
+      "bsonType": "object",
+      "required": [
+        "location_id",
+        "date",
+        "frequency",
+        "method",
+        "result"
+      ],
+      "properties": {
+        "location_id": {
+          "bsonType": "string",
+          "description": "Id of location (cna be a power plant, a city etc.)"
+        },
+        "date": {
+          "bsonType": "string",
+          "description": "date of the feature (typically a date, not a datetime)"
+        },
+        "frequency": {
+          "enum": [
+            "daily",
+            "weekly",
+            "monthly",
+            "quarterly",
+            "yearly",
+            "all",
+            "custom"
+          ],
+          "description": "frequency of the estimation"
+        },
+        "method": {
+          "bsonType": "object",
+          "description": "Id and details about the method used",
+          "required": [
+            "id",
+            "details"
+          ],
+          "properties": {
+            "id": {
+              "bsonType": "string",
+              "description": "An id of the method to be used as unique constraint for a result"
+            },
+            "details": {
+              "bsonType": "object",
+              "description": "Information about the model used, parameters etc."
+            }
+          }
+        },
+        "result": {
+          "bsonType": "object",
+          "description": "NO2 emission results"
+        }
+      }
+    }
+  }
+}

@@ -5,9 +5,11 @@ from sqlalchemy.ext.declarative import declarative_base
 import psycopg2
 from geoalchemy2 import Geometry
 
+
 engine = create_engine(
     "postgresql://{}:{}@{}/{}".format(os.environ["POSTGRES_USER"], os.environ["POSTGRES_PASS"], os.environ["POSTGRES_CONNECTION_NAME"], os.environ['DB_NAME']))
 Base = declarative_base(engine)
+
 
 class Facilities(Base):
     __tablename__ = "facilities"
@@ -21,6 +23,7 @@ class Facilities(Base):
     id                 = Column('id'                 ,Text, primary_key=True)
     country            = Column('country'            ,Text)
 
+
 class Units(Base):
     __tablename__ = "units"
 
@@ -33,6 +36,7 @@ class Units(Base):
     id            = Column('id'                     ,Text, primary_key=True)
 
     facilities = relationship('Facilities', backref='units')
+
 
 class Emissions(Base):
     __tablename__ = "emissions"

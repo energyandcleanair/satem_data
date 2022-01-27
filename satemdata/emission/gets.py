@@ -1,4 +1,4 @@
-from db_connector import engine, Facilities, Units, Emissions, Base
+from db import engine, Facilities, Units, Emissions, Base
 from sqlalchemy.orm import sessionmaker, scoped_session
 import warnings
 import pandas as pd
