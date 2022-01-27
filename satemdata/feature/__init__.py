@@ -4,4 +4,4 @@ FEATURES_UNIQUE_COLS = ["location_id", "date"]
 FEATURES_COLLECTION = "features"
 DATE_FORMAT = "%Y-%m-%d"
 
-from feature.crud import *
+from .crud import *

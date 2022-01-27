@@ -1,7 +1,7 @@
 import json
 from collections import OrderedDict
 
-import db_mongo
+from satemdata import db_mongo
 
 from . import DB_SATEM
 from . import FEATURES_COLLECTION
@@ -18,13 +18,19 @@ def get_feature_col(db=None, db_name=DB_SATEM, collection_name=FEATURES_COLLECTI
                                    db_name=db_name)
 
 
-def create_feature_index(feature_col=get_feature_col()):
+def create_feature_index(feature_col=None):
+    if feature_col is None:
+        feature_col = get_feature_col()
+
     return db_mongo.create_index(collection=feature_col,
                     cols=FEATURES_UNIQUE_COLS,
                     unique=True)
 
 
-def enforce_schema(db=get_feature_db()):
+def enforce_schema(db=None):
+    if db is None:
+        db = get_feature_db()
+
     with open('satemdata/feature/schemas/feature.json', 'r') as j:
         schema = json.loads(j.read())
 

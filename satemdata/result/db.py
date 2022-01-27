@@ -1,7 +1,7 @@
 import json
 from collections import OrderedDict
 
-import db_mongo
+from satemdata import db_mongo
 
 from . import DB_SATEM
 from . import RESULTS_COLLECTION
@@ -18,13 +18,19 @@ def get_result_col(db=None, db_name=DB_SATEM, collection_name=RESULTS_COLLECTION
                                    db_name=db_name)
 
 
-def create_result_index(result_col=get_result_col()):
+def create_result_index(result_col=None):
+    if result_col is None:
+        result_col = get_result_col()
+
     return db_mongo.create_index(collection=result_col,
                     cols=RESULTS_UNIQUE_COLS,
                     unique=True)
 
 
-def enforce_schema(db=get_result_db()):
+def enforce_schema(db=None):
+    if db is None:
+        db = get_result_db()
+
     with open('satemdata/result/schemas/result.json', 'r') as j:
         schema = json.loads(j.read())
 
