@@ -10,7 +10,7 @@
             "description": "Id of location (cna be a power plant, a city etc.)"
           },
           "date": {
-            "bsonType": "string",
+            "bsonType": "date",
             "description": "date of the feature (typically a date, not a datetime)"
           },
           "tropomi_no2": {

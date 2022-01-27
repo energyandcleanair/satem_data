@@ -1,0 +1,10 @@
+{
+  "location_id": "wu_1",
+  "frequency": "daily",
+  "date": "2019-01-01",
+  "method": {
+    "id": "method_1",
+    "details": {}
+  },
+  "result": {}
+}

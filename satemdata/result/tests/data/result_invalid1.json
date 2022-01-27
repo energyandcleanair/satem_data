@@ -1,0 +1,10 @@
+{
+  "location_id": "wu_1",
+  "frequency": "daily11",
+  "date": "2019-01-01",
+  "method": {
+    "NOID": "method should have an id field",
+    "details": {}
+  },
+  "result": {}
+}

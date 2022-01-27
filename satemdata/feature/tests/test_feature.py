@@ -1,12 +1,12 @@
 import datetime as dt
 import pytest
 import json
-from pymongo.errors import DuplicateKeyError
+from pymongo.errors import DuplicateKeyError, WriteError
 
 
 import feature
 from feature import db
-from feature.crud import insert_feature
+from feature.crud import *
 from feature import FEATURES_UNIQUE_COLS
 from feature import FEATURES_COLLECTION
 from feature import DB_SATEM_TEST
@@ -30,50 +30,59 @@ def feature_col():
 def features():
     return [
         {
-            'facility_id': 'test001',
-            'date': dt.date.today().strftime(DATE_FORMAT)
+            'location_id': 'test001',
+            'date': dt.date.today().strftime(DATE_FORMAT),
+            'tropomi_no2': {}
         },{
-            'facility_id': 'test001',
-            'date': (dt.date.today()-dt.timedelta(days=1)).strftime(DATE_FORMAT)
+            'location_id': 'test001',
+            'date': (dt.date.today()-dt.timedelta(days=1)).strftime(DATE_FORMAT),
+            'tropomi_no2': {}
         },{
-            'facility_id': 'test002',
-            'date': dt.date.today().strftime(DATE_FORMAT)
+            'location_id': 'test002',
+            'date': dt.date.today().strftime(DATE_FORMAT),
+            'tropomi_no2': {}
         },{
-            'facility_id': 'test002',
-            'date': (dt.date.today()-dt.timedelta(days=1)).strftime(DATE_FORMAT)
+            'location_id': 'test002',
+            'date': (dt.date.today()-dt.timedelta(days=1)).strftime(DATE_FORMAT),
+            'tropomi_no2': {}
         }]
 
 
 def test_crud_feature(feature_col, features):
 
     item = features[0]
+    insert_feature(item, feature_col=feature_col)
 
-    feature_col.insert_one(item.copy())
-    found = feature_col.find({}, item)
-    assert len(list(found))==1
+    # Check that we did copy item (otherwise mongo adds an _id)
+    assert "_id" not in item
 
-    feature_col.delete_many(filter={'facility_id': item['facility_id']})
+    found = get_features(feature_col=feature_col, additional_filter=item)
+    assert len(found) == 1
 
-    found = feature_col.find({}, item)
-    assert len(list(found)) == 0
+    delete_features(feature_col=feature_col, location_id=item['location_id'])
 
-    feature_col.insert_many([item.copy(), item.copy()])
-    found = feature_col.find({}, item)
-    assert len(list(found)) == 2
+    found = get_features(feature_col=feature_col, additional_filter=item)
+    assert len(found) == 0
+
+    insert_features([item, item], feature_col=feature_col)
+    found = get_features(feature_col=feature_col, additional_filter=item)
+    assert len(found) == 2
 
     # Try creating index
     # It should fail since there are two similar items
     with pytest.raises(DuplicateKeyError):
         db.create_feature_index(feature_col=feature_col)
 
-    feature_col.delete_one(filter={'facility_id': item['facility_id']})
+    delete_features(feature_col=feature_col, location_id=item['location_id'])
 
     # It should now succed
     db.create_feature_index(feature_col=feature_col)
 
     # It should failed
+    insert_feature(item, feature_col=feature_col)
     with pytest.raises(DuplicateKeyError):
-        feature_col.insert_one(item.copy())
+        insert_feature(item, feature_col=feature_col)
+
 
 
 def test_enforce_schema(db_test, feature_col):
@@ -82,11 +91,17 @@ def test_enforce_schema(db_test, feature_col):
     with open('satemdata/feature/tests/data/feature_valid.json', 'r') as j:
         feature_valid = json.loads(j.read())
 
-    insert_feature(feature_valid.copy(), feature_col=feature_col)
+    insert_feature(feature_valid, feature_col=feature_col)
 
     db.enforce_schema(db=db_test)
 
-    insert_feature(feature_valid.copy(), feature_col=feature_col)
+    insert_feature(feature_valid, feature_col=feature_col)
+
+    with open('satemdata/feature/tests/data/feature_invalid1.json', 'r') as j:
+        feature_invalid1 = json.loads(j.read())
+
+    with pytest.raises(WriteError):
+        insert_feature(feature_invalid1, feature_col=feature_col)
 
 
 def test_create_index(feature_col):
@@ -107,18 +122,18 @@ def test_create_index(feature_col):
 def test_get_features(feature_col, features):
 
     feature_col.delete_many({})
-    found = feature.get_features(facility_id=features[0]['facility_id'], feature_col=feature_col)
+    found = get_features(location_id=features[0]['location_id'], feature_col=feature_col)
     assert len(found) == 0
 
-    feature.insert_features(features, feature_col=feature_col)
+    insert_features(features, feature_col=feature_col)
 
-    found = feature.get_features(facility_id=features[0]['facility_id'], feature_col=feature_col)
+    found = get_features(location_id=features[0]['location_id'], feature_col=feature_col)
     assert len(list(found)) == 2
 
-    found = feature.get_features(date=features[0]['date'], feature_col=feature_col)
+    found = get_features(date=features[0]['date'], feature_col=feature_col)
     assert len(list(found)) == 2
 
-    found = feature.get_features(facility_id=features[0]['facility_id'],
-                                 date=features[0]['date'],
-                                 feature_col=feature_col)
+    found = get_features(location_id=features[0]['location_id'],
+                        date=features[0]['date'],
+                        feature_col=feature_col)
     assert len(list(found)) == 1

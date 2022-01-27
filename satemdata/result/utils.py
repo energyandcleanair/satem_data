@@ -9,10 +9,10 @@ def get_result_date(result):
 
 def clean_date(date):
     if isinstance(date, dt.date) or isinstance(date, dt.datetime):
-        date = date.strftime(DATE_FORMAT)
+        return date
     else:
         try:
-            date = dt.datetime.strptime(date, DATE_FORMAT).strftime(DATE_FORMAT)
+            date = dt.datetime.strptime(date, DATE_FORMAT)
         except ValueError:
             raise ValueError("date should be with format %s (actual value: %s)" % (DATE_FORMAT, date))
     return date
@@ -32,7 +32,7 @@ def clean_result(result):
     result['date'] = clean_date(result['date'])
 
     # Check required fields are here
-    required_fields = ["location_id", "date", "tropomi_no2"]
+    required_fields = ["location_id", "date", "frequency", "method"]
     missing = set(required_fields) - set(result.keys())
     if missing:
         raise ValueError("Missing fields in result: %s"% (missing,))

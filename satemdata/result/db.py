@@ -29,4 +29,4 @@ def enforce_schema(db=get_result_db()):
         schema = json.loads(j.read())
 
     schema = OrderedDict(schema)
-    db.command(schema)
+    return db.command(schema)

@@ -9,10 +9,10 @@ def get_feature_date(feature):
 
 def clean_date(date):
     if isinstance(date, dt.date) or isinstance(date, dt.datetime):
-        date = date.strftime(DATE_FORMAT)
+        return date
     else:
         try:
-            date = dt.datetime.strptime(date, DATE_FORMAT).strftime(DATE_FORMAT)
+            date = dt.datetime.strptime(date, DATE_FORMAT)
         except ValueError:
             raise ValueError("date should be with format %s (actual value: %s)" % (DATE_FORMAT, date))
     return date
