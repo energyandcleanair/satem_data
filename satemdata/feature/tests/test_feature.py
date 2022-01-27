@@ -84,7 +84,6 @@ def test_crud_feature(feature_col, features):
         insert_feature(item, feature_col=feature_col)
 
 
-
 def test_enforce_schema(db_test, feature_col):
 
     # First insert a valid item

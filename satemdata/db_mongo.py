@@ -1,4 +1,5 @@
 import pymongo
+import logging
 from pymongo import MongoClient
 from decouple import config
 
@@ -8,7 +9,8 @@ def get_database(db_name):
     # Provide the mongodb atlas url to connect python to mongodb using pymongo
     url = config("CREA_MONGODB_URL", None)
     if not url:
-        raise EnvironmentError("Missing CREA_MONGODB_URL environment variable.")
+        logging.warning("Missing CREA_MONGODB_URL environment variable.")
+        return None
 
     client = MongoClient(url)
 
