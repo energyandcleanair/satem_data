@@ -6,14 +6,14 @@ from .utils import clean_feature
 from .utils import clean_date
 
 
-def insert_feature(feature, feature_col=None, drop_existing_first=False):
+def insert_feature(feature, feature_col=None, drop_if_exists=False):
     if feature_col is None:
         feature_col = db.get_feature_col()
 
     feature = feature.copy() #MongoDB will add _id to it
     feature = clean_feature(feature)
 
-    if drop_existing_first:
+    if drop_if_exists:
         delete_features(location_id=feature["location_id"],
                         date=feature["date"],
                         feature_col=feature_col)
@@ -21,11 +21,11 @@ def insert_feature(feature, feature_col=None, drop_existing_first=False):
     return feature_col.insert_one(feature)
 
 
-def insert_features(features, feature_col=None, drop_existing_first=False):
+def insert_features(features, feature_col=None, drop_if_exists=False):
     if feature_col is None:
         feature_col = db.get_feature_col()
 
-    if drop_existing_first:
+    if drop_if_exists:
         location_dates = pd.DataFrame(features) \
             .groupby(['location_id']).date.unique() \
             .reset_index().to_dict(orient='records')

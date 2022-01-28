@@ -81,10 +81,10 @@ def test_crud_feature(feature_col, features):
     # It should failed
     insert_feature(item, feature_col=feature_col)
     with pytest.raises(DuplicateKeyError):
-        insert_feature(item, feature_col=feature_col, drop_existing_first=False)
+        insert_feature(item, feature_col=feature_col, drop_if_exists=False)
 
     # Unless we ask to drop first
-    insert_feature(item, feature_col=feature_col, drop_existing_first=True)
+    insert_feature(item, feature_col=feature_col, drop_if_exists=True)
 
 
 def test_delete_existing(feature_col, features):
@@ -93,9 +93,9 @@ def test_delete_existing(feature_col, features):
     db.create_feature_index(feature_col=feature_col)
 
     with pytest.raises(BulkWriteError):
-        insert_features(features, feature_col=feature_col, drop_existing_first=False)
+        insert_features(features, feature_col=feature_col, drop_if_exists=False)
 
-    insert_features(features, feature_col=feature_col, drop_existing_first=True)
+    insert_features(features, feature_col=feature_col, drop_if_exists=True)
 
 
 def test_enforce_schema(db_test, feature_col):
