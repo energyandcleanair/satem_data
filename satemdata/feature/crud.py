@@ -38,19 +38,32 @@ def insert_features(features, feature_col=None, drop_if_exists=False):
     return feature_col.insert_many(features)
 
 
-def get_features(location_id=None, date=None, additional_filter={}, feature_col=None):
+def get_features(location_id=None, date=None,
+                 date_from=None, date_to=None,
+                 additional_filter={}, feature_col=None):
+
     if feature_col is None:
         feature_col = db.get_feature_col()
 
     filter = additional_filter.copy()
+    filter_date = {}
     if "date" in filter:
-        filter['date'] = clean_date(filter['date'])
+        filter_date["$eq"] = clean_date(filter['date'])
 
     if location_id:
         filter['location_id'] = location_id
 
     if date:
-        filter['date'] = clean_date(date)
+        filter_date["$eq"] = clean_date(date)
+
+    if date_from:
+        filter_date["$gte"] = clean_date(date_from)
+
+    if date_to:
+        filter_date["$lte"] = clean_date(date_to)
+
+    if filter_date:
+        filter['date'] = filter_date
 
     return list(feature_col.find(filter))
 

@@ -68,6 +68,24 @@ def test_crud_feature(feature_col, features):
     found = get_features(feature_col=feature_col, additional_filter=item)
     assert len(found) == 2
 
+    delete_features(feature_col=feature_col, location_id=item["location_id"])
+    insert_features(features=features, feature_col=feature_col)
+    found = get_features(feature_col=feature_col,
+                        date_from=dt.date.today())
+    assert len(list(found)) == 2
+
+    found = get_features(feature_col=feature_col,
+                        date_to=dt.date.today() - dt.timedelta(days=1))
+    assert len(list(found)) == 2
+
+    found = get_features(feature_col=feature_col,
+                        date_from=dt.date.today(),
+                        date_to=dt.date.today() - dt.timedelta(days=1))
+    assert len(list(found)) == 0
+
+
+    insert_features([item], feature_col=feature_col)
+
     # Try creating index
     # It should fail since there are two similar items
     with pytest.raises(DuplicateKeyError):

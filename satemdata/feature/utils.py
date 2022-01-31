@@ -8,8 +8,10 @@ def get_feature_date(feature):
 
 
 def clean_date(date):
-    if isinstance(date, dt.date) or isinstance(date, dt.datetime):
+    if isinstance(date, dt.datetime):
         return date
+    if isinstance(date, dt.date):
+        return dt.datetime.combine(date, dt.datetime.min.time())
     else:
         try:
             date = dt.datetime.strptime(date, DATE_FORMAT)
