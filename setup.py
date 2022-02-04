@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="satemdata",
-    version="0.1.9a",
+    version="0.2.0",
     author="CREA Dev Team",
     author_email="hubert@energyandcleanair.org",
     description="A package to retrieve emission and feature data from SatEm related databases.",

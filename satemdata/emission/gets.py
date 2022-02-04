@@ -7,7 +7,7 @@ import warnings
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import func
 
-from emission.db import engine, Facilities, Units, Emissions, Base
+from .db import engine, Facilities, Units, Emissions
 
 
 
