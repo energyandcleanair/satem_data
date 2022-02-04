@@ -7,7 +7,7 @@ import warnings
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import func
 
-from .db import engine, Facilities, Units, Emissions
+from .db import get_engine, Facilities, Units, Emissions
 
 
 
@@ -20,7 +20,7 @@ def get_facilities(country = None):
     """
     assert isinstance(country, str)
 
-    session = scoped_session(sessionmaker(autocommit=False,autoflush=False,bind=engine))
+    session = scoped_session(sessionmaker(autocommit=False,autoflush=False,bind=get_engine()))
     if country is None:
         facs        = session.query(Facilities).all()
     else:
@@ -46,7 +46,7 @@ def get_units(facility_id=None, country=None):
     facility_id: str or list
         The ids of the facilities to retrieve units list from.
     """
-    session = scoped_session(sessionmaker(autocommit=False,autoflush=False,bind=engine))
+    session = scoped_session(sessionmaker(autocommit=False,autoflush=False,bind=get_engine()))
 
     assert (facility_id is None) or isinstance(facility_id, str) or isinstance(facility_id, list)
     assert (country is None) or isinstance(country, str)
@@ -105,7 +105,7 @@ def get_emissions(date_from, date_to, facility_id=None, unit_id=None, tz = 'UTC'
     sum: boolean.
         Whether or not to sum emissions for each unit
     """
-    session = scoped_session(sessionmaker(autocommit=False,autoflush=False,bind=engine))
+    session = scoped_session(sessionmaker(autocommit=False,autoflush=False,bind=get_engine()))
 
     assert (facility_id is None) or isinstance(facility_id, str) or isinstance(facility_id, list)
     assert (unit_id is None) or isinstance(unit_id, str) or isinstance(unit_id, list)

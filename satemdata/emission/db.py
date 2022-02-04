@@ -5,9 +5,15 @@ from geoalchemy2 import Geometry
 from decouple import config
 
 
-engine = create_engine(config('CREA_POSTGRES_URL'))
-    # "postgresql://{}:{}@{}/{}".format(os.environ["POSTGRES_USER"], os.environ["POSTGRES_PASS"], os.environ["POSTGRES_CONNECTION_NAME"], os.environ['DB_NAME']))
+engine = None
 Base = declarative_base(engine)
+
+
+def get_engine():
+    global engine
+    if engine is None:
+        engine = create_engine(config('CREA_POSTGRES_URL'))
+    return engine
 
 
 class Facilities(Base):
