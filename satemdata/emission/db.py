@@ -1,13 +1,12 @@
-import os
 from sqlalchemy import create_engine, Column, Integer, DateTime, Float, engine, ForeignKey, Text, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
-import psycopg2
 from geoalchemy2 import Geometry
+from decouple import config
 
 
-engine = create_engine(
-    "postgresql://{}:{}@{}/{}".format(os.environ["POSTGRES_USER"], os.environ["POSTGRES_PASS"], os.environ["POSTGRES_CONNECTION_NAME"], os.environ['DB_NAME']))
+engine = create_engine(config('CREA_POSTGRES_URL'))
+    # "postgresql://{}:{}@{}/{}".format(os.environ["POSTGRES_USER"], os.environ["POSTGRES_PASS"], os.environ["POSTGRES_CONNECTION_NAME"], os.environ['DB_NAME']))
 Base = declarative_base(engine)
 
 
@@ -44,14 +43,14 @@ class Emissions(Base):
     id            = Column('id'           ,Integer, primary_key=True)
     unit_id       = Column('unit_id'      ,Text, 
                            ForeignKey('units.id', ondelete = 'CASCADE'))
-    time          = Column('time'         ,DateTime(timezone = True))
+    date          = Column('date'         ,DateTime(timezone = True))
     pollutant     = Column('pollutant'    ,Text)
     emission      = Column('emission'     ,Float(32))
     unit          = Column('unit'         ,Text)
 
     __table_args__ = (
     # this can be db.PrimaryKeyConstraint if you want it to be a primary key
-    UniqueConstraint('unit_id', 'time', 'pollutant'),
+    UniqueConstraint('unit_id', 'date', 'pollutant'),
     )
 
     units      = relationship('Units', backref='emissions')
