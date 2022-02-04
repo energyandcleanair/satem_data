@@ -1,21 +1,39 @@
 import datetime as dt
+import pandas as pd
+
+
 from . import db
 from .utils import clean_result
 from .utils import clean_date
 
 
-def insert_result(result, result_col=None):
+def insert_result(result, result_col=None, drop_if_exists=False):
     if result_col is None:
         result_col = db.get_result_col()
+
+    if drop_if_exists:
+        # TODO make faster
+        delete_results(location_id=result["location_id"],
+                       date=result["date"],
+                       additional_filter={"method.id": result["method"]["id"]},
+                       result_col=result_col)
 
     result = result.copy() #MongoDB will add id to it
     result = clean_result(result)
     return result_col.insert_one(result)
 
 
-def insert_results(results, result_col=None):
+def insert_results(results, result_col=None, drop_if_exists=False):
     if result_col is None:
         result_col = db.get_result_col()
+
+    if drop_if_exists:
+        # TODO make faster
+        for r in results:
+            delete_results(location_id=r["location_id"],
+                            date = r["date"],
+                            additional_filter = {"method.id": r["method"]["id"]},
+                            result_col = result_col)
 
     results = [clean_result(x.copy()) for x in results]
     return result_col.insert_many(results)
@@ -38,11 +56,14 @@ def get_results(location_id=None, date=None, additional_filter={}, result_col=No
     return list(result_col.find(filter))
 
 
-def delete_results(location_id, date=None, result_col=None):
+def delete_results(location_id, date=None, additional_filter={}, result_col=None):
     if result_col is None:
         result_col = db.get_result_col()
 
-    filter = {'location_id': location_id}
+    filter = additional_filter.copy()
+
+    if location_id:
+        filter['location_id'] = location_id
 
     if date:
         filter['date'] = clean_date(date)

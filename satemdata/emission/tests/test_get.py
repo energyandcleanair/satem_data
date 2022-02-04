@@ -16,6 +16,15 @@ def test_get_emissions():
     assert set(["facility_id", "pollutant", "unit_id", "lon_avg", "lat_avg"]) <= set(emissions.columns)
     assert "date" not in emissions.columns
 
+    # Export for Stefanos to extract
+    emissions[emissions.pollutant=="nox"] \
+        .groupby(['facility_id','pollutant','lon_avg','lat_avg']) \
+        .emission.sum().reset_index() \
+        .sort_values(['emission'], ascending=False) \
+        .head(100) \
+        .to_csv("top100_facilities.csv", index_label=False)
+
+
     # Not summing
     facility_id = emissions.facility_id.iloc[0]
     emissions_facility = get_emissions(facility_id=facility_id,
@@ -27,3 +36,5 @@ def test_get_emissions():
 
     assert emissions_facility.facility_id.unique() == [facility_id]
     assert "date" in emissions_facility.columns
+
+

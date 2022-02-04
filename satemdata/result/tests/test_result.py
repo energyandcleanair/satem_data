@@ -83,7 +83,10 @@ def test_crud_result(result_col, results):
     # It should failed
     insert_result(item, result_col=result_col)
     with pytest.raises(DuplicateKeyError):
-        insert_result(item, result_col=result_col)
+        insert_result(item, result_col=result_col, drop_if_exists=False)
+
+    # Unless we ask to drop it first
+    insert_result(item, result_col=result_col, drop_if_exists=True)
 
 
 def test_enforce_schema(db_test, result_col):
