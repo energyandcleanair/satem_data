@@ -6,5 +6,6 @@
     "NOID": "method should have an id field",
     "details": {}
   },
+  "crosswind_km": 10,
   "result": {}
 }

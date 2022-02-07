@@ -49,6 +49,9 @@
             }
           }
         },
+        "crosswind_km": {
+          "bsonType": "float"
+        },
         "result": {
           "bsonType": "object",
           "description": "NO2 emission results"
