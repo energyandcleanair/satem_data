@@ -15,7 +15,10 @@ def insert_result(result, result_col=None, drop_if_exists=False):
         # TODO make faster
         delete_results(location_id=result["location_id"],
                        date=result["date"],
-                       additional_filter={"method.id": result["method"]["id"]},
+                       additional_filter={"method.id": result["method"]["id"],
+                                          "wind_m_s_threshold": result.get("wind_m_s_threshold"),
+                                          "crosswind_km": result.get("crosswind_km"),
+                                          "frequency": result.get("frequency")},
                        result_col=result_col)
 
     result = result.copy() #MongoDB will add id to it
@@ -32,7 +35,10 @@ def insert_results(results, result_col=None, drop_if_exists=False):
         for r in results:
             delete_results(location_id=r["location_id"],
                             date = r["date"],
-                            additional_filter = {"method.id": r["method"]["id"]},
+                            additional_filter={"method.id": r["method"]["id"],
+                                              "wind_m_s_threshold": r.get("wind_m_s_threshold"),
+                                              "crosswind_km": r.get("crosswind_km"),
+                                              "frequency": r.get("frequency")},
                             result_col = result_col)
 
     results = [clean_result(x.copy()) for x in results]
