@@ -6,7 +6,7 @@
       "required": [
         "location_id",
         "date",
-        "frequency",
+        "window",
         "method",
         "result"
       ],
@@ -19,17 +19,9 @@
           "bsonType": "date",
           "description": "date of the feature (typically a date, not a datetime)"
         },
-        "frequency": {
-          "enum": [
-            "daily",
-            "weekly",
-            "monthly",
-            "quarterly",
-            "yearly",
-            "all",
-            "custom"
-          ],
-          "description": "frequency of the estimation"
+        "window": {
+          "bsonType": "string",
+          "description": "window of the estimation"
         },
         "method": {
           "bsonType": "object",
@@ -50,7 +42,7 @@
           }
         },
         "crosswind_km": {
-          "bsonType": "float"
+          "bsonType": ["double","int"]
         },
         "result": {
           "bsonType": "object",

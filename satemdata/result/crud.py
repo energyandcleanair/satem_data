@@ -56,7 +56,7 @@ def get_results(location_id=None, date=None, additional_filter={}, result_col=No
     return list(result_col.find(filter))
 
 
-def delete_results(location_id, date=None, additional_filter={}, result_col=None):
+def delete_results(location_id=None, date=None, additional_filter={}, result_col=None):
     if result_col is None:
         result_col = db.get_result_col()
 

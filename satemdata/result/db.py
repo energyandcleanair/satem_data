@@ -27,6 +27,12 @@ def create_result_index(result_col=None):
                     unique=True)
 
 
+def clear_schema(db=None):
+    if db is None:
+        db = get_result_db()
+    return db.command({"collMod": "results","validator": {}})
+
+
 def enforce_schema(db=None):
     if db is None:
         db = get_result_db()

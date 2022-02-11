@@ -68,11 +68,15 @@ def get_features(location_id=None, date=None,
     return list(feature_col.find(filter))
 
 
-def delete_features(location_id, date=None, dates=None, feature_col=None):
+def delete_features(location_id=None, date=None, dates=None, feature_col=None,
+                    additional_filter={}):
     if feature_col is None:
         feature_col = db.get_feature_col()
 
-    filter = {'location_id': location_id}
+    filter = additional_filter.copy()
+
+    if location_id:
+        filter['location_id'] = location_id
 
     if date:
         filter['date'] = clean_date(date)
