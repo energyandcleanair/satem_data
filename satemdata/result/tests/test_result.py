@@ -29,22 +29,22 @@ def results():
     return [
         {
             'location_id': 'test001',
-            'frequency': 'daily',
+            'window': 'daily',
             'date': dt.date.today().strftime(DATE_FORMAT),
             'method': {'id': 'method_1'}
         },{
             'location_id': 'test001',
-            'frequency': 'daily',
+            'window': 'daily',
             'date': (dt.date.today()-dt.timedelta(days=1)).strftime(DATE_FORMAT),
             'method': {'id': 'method_1'}
         },{
             'location_id': 'test002',
-            'frequency': 'daily',
+            'window': 'daily',
             'date': dt.date.today().strftime(DATE_FORMAT),
             'method': {'id': 'method_1'}
         },{
             'location_id': 'test002',
-            'frequency': 'daily',
+            'window': 'daily',
             'date': (dt.date.today()-dt.timedelta(days=1)).strftime(DATE_FORMAT),
             'method': {'id': 'method_1'}
         }]
