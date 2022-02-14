@@ -7,18 +7,18 @@ def test_get_emissions():
     emissions = get_emissions(facility_id=None,
                               unit_id=None,
                               date_from="2021-01-01",
-                              date_to="2021-12-31",
+                              date_to="2021-01-31",
                               pollutant=None,
                               sum=True)
 
     assert len(emissions) > 0
     assert len(emissions.facility_id.unique()) > 0
-    assert set(["facility_id", "pollutant", "unit_id", "lon_avg", "lat_avg"]) <= set(emissions.columns)
+    assert set(["facility_id", "pollutant", "unit_id", "lon", "lat"]) <= set(emissions.columns)
     assert "date" not in emissions.columns
 
     # Export for Stefanos to extract
     emissions[emissions.pollutant=="nox"] \
-        .groupby(['facility_id','pollutant','lon_avg','lat_avg']) \
+        .groupby(['facility_id','pollutant','lon','lat']) \
         .emission.sum().reset_index() \
         .sort_values(['emission'], ascending=False) \
         .head(100) \
@@ -35,6 +35,17 @@ def test_get_emissions():
                               sum=False)
 
     assert emissions_facility.facility_id.unique() == [facility_id]
+    assert set(["facility_id", "pollutant", "unit_id", "lon", "lat"]) <= set(emissions_facility.columns)
     assert "date" in emissions_facility.columns
 
+    # Pollutant filtering
+    emissions_facility_nox = get_emissions(facility_id=facility_id,
+                                           date_from="2019-01-01",
+                                           date_to="2019-01-31",
+                                           pollutant="nox")
+
+    assert emissions_facility_nox.facility_id.unique() == [facility_id]
+    assert emissions_facility_nox.pollutant.unique() == ['nox']
+    assert set(["facility_id", "pollutant", "unit_id", "lon", "lat"]) <= set(emissions_facility.columns)
+    assert "date" in emissions_facility.columns
 

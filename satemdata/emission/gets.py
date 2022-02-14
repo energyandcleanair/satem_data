@@ -30,7 +30,7 @@ def get_facilities(country = None):
         warnings.warn('There is no data matching criteria country = {}. Anything wrong?'.format(country))
         return pd.DataFrame()
 
-    facs = pd.DataFrame([(ff.source, ff.orig_facility_id, ff.name, ff.lat_avg, ff.lon_avg,
+    facs = pd.DataFrame([(ff.source, ff.orig_facility_id, ff.name, ff.lat, ff.lon,
                           ff.id, ff.country) for ff in facs],
                         columns = ['source','orig_facility_id','name','lat','lon','id','country'])
     session.close()
@@ -133,21 +133,21 @@ def get_emissions(date_from, date_to, facility_id=None, unit_id=None, tz = 'UTC'
 
     if sum:
         emissions = session.query(Units.facility_id,
-                                  Facilities.lon_avg,
-                                  Facilities.lat_avg,
+                                  Facilities.lon,
+                                  Facilities.lat,
                                   Emissions.unit_id,
                                   Emissions.pollutant,
                                   Emissions.unit,
                                   func.sum(Emissions.emission).label('emission')) \
             .select_from(Emissions) \
             .join(Units).join(Facilities) \
-            .group_by(Facilities.lon_avg,
-                      Facilities.lat_avg,
+            .group_by(Facilities.lon,
+                      Facilities.lat,
                       Units.facility_id, Emissions.unit_id, Emissions.pollutant, Emissions.unit)
     else:
         emissions = session.query(Units.facility_id,
-                                  Facilities.lon_avg,
-                                  Facilities.lat_avg,
+                                  Facilities.lon,
+                                  Facilities.lat,
                                   Emissions.unit_id,
                                   Emissions.date,
                                   Emissions.pollutant,
@@ -166,12 +166,11 @@ def get_emissions(date_from, date_to, facility_id=None, unit_id=None, tz = 'UTC'
     if facility_id is not None:
             emissions = emissions.filter(Units.facility_id.in_(facility_id))
 
-    emissions = emissions.all()
+    emissions = pd.read_sql(emissions.statement, emissions.session.bind)
 
     if len(emissions) == 0:
         warnings.warn('There is no emissions data matching criteria unit_id = {}, date_from = {}, date_to = {}, and pollutant = {}. Anything wrong?'.format(str(unit_id), date_from, date_to, str(pollutant)))
         return pd.DataFrame()
 
-    emissions = pd.DataFrame(emissions)
     session.close()
     return emissions
