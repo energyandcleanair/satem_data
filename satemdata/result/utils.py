@@ -32,7 +32,7 @@ def clean_result(result):
     result['date'] = clean_date(result['date'])
 
     # Check required fields are here
-    required_fields = ["location_id", "date", "frequency", "method"]
+    required_fields = ["location_id", "date", "window", "method"]
     missing = set(required_fields) - set(result.keys())
     if missing:
         raise ValueError("Missing fields in result: %s"% (missing,))

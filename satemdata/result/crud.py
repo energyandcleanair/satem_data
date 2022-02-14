@@ -18,7 +18,7 @@ def insert_result(result, result_col=None, drop_if_exists=False):
                        additional_filter={"method.id": result["method"]["id"],
                                           "wind_m_s_threshold": result.get("wind_m_s_threshold"),
                                           "crosswind_km": result.get("crosswind_km"),
-                                          "frequency": result.get("frequency")},
+                                          "window": result.get("window")},
                        result_col=result_col)
 
     result = result.copy() #MongoDB will add id to it
